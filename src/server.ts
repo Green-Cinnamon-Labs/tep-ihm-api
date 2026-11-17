@@ -1,13 +1,7 @@
-import http from 'node:http';
+import Fastify from 'fastify';
 
-const server = http.createServer((req, res) => {
-  if (req.method === 'GET' && req.url === '/healthz') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok' }));
-    return;
-  }
-  res.writeHead(404);
-  res.end();
-});
+const app = Fastify({ logger: true });
 
-server.listen(3000, () => console.log('listening on :3000'));
+app.get('/healthz', async () => ({ status: 'ok' }));
+
+await app.listen({ port: 3000 });
