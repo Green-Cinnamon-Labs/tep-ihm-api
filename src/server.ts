@@ -1,8 +1,6 @@
-import Fastify from 'fastify';
+import { buildApp } from './app.js';
 import { config } from './config.js';
 
-const app = Fastify({ logger: { level: config.LOG_LEVEL } })
+const app = buildApp({ logger: { level: config.LOG_LEVEL } });
 
-app.get('/healthz', async () => ({ status: 'ok' }));
-
-app.listen({ port: config.PORT, host: config.HOST })
+await app.listen({ port: config.PORT, host: config.HOST });
