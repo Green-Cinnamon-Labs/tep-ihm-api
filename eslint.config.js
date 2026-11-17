@@ -14,5 +14,6 @@ export default defineConfig(
             },
         },
     },
+    { rules: { '@typescript-eslint/require-await': 'off' } },
     prettier,
 );

@@ -1,17 +1,6 @@
 import { AttributeIds, OPCUAClient } from 'node-opcua';
 import { SHUTDOWN_NODE, XMEAS_NODES, XMV_NODES } from './signals.js';
-
-export type Snapshot = {
-    simTime: number | null;
-    xmeas: number[];
-    xmv: number[];
-    shutdown: boolean;
-};
-
-export type Frame = {
-    connection: 'connected' | 'reconnecting';
-    snapshot: Snapshot | null;
-};
+import { type Frame, type Snapshot, SnapshotSchema } from './schema.js';
 
 export async function connectPlant(endpoint: string) {
     const client = OPCUAClient.create({
@@ -50,13 +39,13 @@ export async function connectPlant(endpoint: string) {
                         attributeId: AttributeIds.Value,
                     })),
                 );
-                const v = results.map((r) => r.value.value);
-                return {
+                const v = results.map((r) => r.value.value as unknown);
+                return SnapshotSchema.parse({
                     simTime: null,
-                    xmeas: v.slice(0, 41).map(Number),
-                    xmv: v.slice(41, 53).map(Number),
+                    xmeas: v.slice(0, 41),
+                    xmv: v.slice(41, 53),
                     shutdown: Boolean(v[53]),
-                };
+                });
             },
             close: async () => {
                 await session.close();
@@ -98,7 +87,8 @@ export function createPlant(endpoint: string) {
         if (!current) return { connection: 'reconnecting', snapshot: null };
         try {
             return { connection: 'connected', snapshot: await current.read() };
-        } catch {
+        } catch (err) {
+            console.warn(`plant read failed: ${String(err)}`);
             if (conn === current) {
                 conn = null;
                 void current.close().catch(() => {});
