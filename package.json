@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },
   "devDependencies": {
     "@types/node": "^22.6.6",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }
