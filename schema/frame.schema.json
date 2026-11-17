@@ -1,0 +1,48 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "connection": {
+            "type": "string",
+            "enum": ["connected", "reconnecting"]
+        },
+        "snapshot": {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "simTime": {
+                            "type": ["number", "null"]
+                        },
+                        "xmeas": {
+                            "minItems": 41,
+                            "maxItems": 41,
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "xmv": {
+                            "minItems": 12,
+                            "maxItems": 12,
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "shutdown": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["simTime", "xmeas", "xmv", "shutdown"],
+                    "additionalProperties": false
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        }
+    },
+    "required": ["connection", "snapshot"],
+    "additionalProperties": false
+}
