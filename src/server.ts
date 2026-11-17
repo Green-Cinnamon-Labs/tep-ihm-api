@@ -1,4 +1,4 @@
-const http = require('node:http');
+import http from 'node:http';
 
 const server = http.createServer((req, res) => {
   if (req.method === 'GET' && req.url === '/healthz') {
