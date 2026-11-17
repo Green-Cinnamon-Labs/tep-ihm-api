@@ -6,6 +6,8 @@ const schema = z.object({
   LOG_LEVEL: z
     .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
     .default('info'),
+  
+  OPCUA_ENDPOINT: z.string().default('opc.tcp://127.0.0.1:4840/tep/server/'),
 });
 
 const parsed = schema.safeParse(process.env);
